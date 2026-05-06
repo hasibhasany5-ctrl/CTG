@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Entry | CAR ZEO CTG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0b1120; font-family: 'Plus Jakarta Sans', sans-serif; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        input, select, textarea { background: rgba(255, 255, 255, 0.05) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: white !important; font-size: 14px !important; padding: 14px !important; border-radius: 12px !important; width: 100%; outline: none; transition: 0.3s; }
+        input:focus, select:focus { border-color: #e31e24 !important; background: rgba(255, 255, 255, 0.08) !important; }
+        label { font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 800; margin-left: 8px; margin-bottom: 4px; display: block; }
+    </style>
+</head>
+<body class="p-4 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md glass p-10 rounded-[35px] shadow-2xl">
+        <div class="text-center mb-8">
+            <img src="https://i.ibb.co.com/MymLgRJG/hasib.jpg" class="h-20 mx-auto rounded-2xl shadow-xl mb-4">
+            <h1 class="text-2xl font-black text-white uppercase">CAR ZEO <span class="text-red-600">CTG</span></h1>
+            <p class="text-[9px] text-blue-400 font-bold uppercase tracking-widest mt-1">Expense Entry Portal</p>
+        </div>
+        <div class="space-y-4">
+            <div><label>Date</label><input type="date" id="expDate"></div>
+            <div><label>Category</label>
+                <select id="expCat">
+                    <option value="Transaction">Transaction</option><option value="Other bill">Other bill</option><option value="Transport">Transport</option><option value="Snacks">Snacks</option><option value="Courier">Courier</option><option value="Office Maintenance">Office Maintenance</option><option value="Rent">Rent</option><option value="Salary">Salary</option><option value="Vehicle Maintenance">Vehicle Maintenance</option><option value="Fuel Cost">Fuel Cost</option><option value="Paper Work">Paper Work</option>
+                </select>
+            </div>
+            <div><label>Description</label><textarea id="expDesc" rows="2" placeholder="বিস্তারিত বিবরণ লিখুন..."></textarea></div>
+            <div><label>Taka</label><input type="number" id="expTaka" placeholder="0.00"></div>
+            <div class="pt-2">
+                <button onclick="submitExpense()" id="submitBtn" class="w-full bg-gradient-to-r from-red-600 to-blue-700 py-4 rounded-2xl font-black uppercase text-sm shadow-xl hover:scale-95 transition-all">Submit Expense</button>
+            </div>
+        </div>
+        <p id="status" class="mt-6 text-center font-bold text-xs"></p>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = { apiKey: "AIzaSyBoAZNSMBdpTspg_ixCf_ln-pxwfws-QbY", databaseURL: "https://carzeo-accountant-hub-default-rtdb.firebaseio.com" };
+        firebase.initializeApp(firebaseConfig); const db = firebase.database();
+        document.getElementById('expDate').valueAsDate = new Date();
+        function submitExpense() {
+            const date = document.getElementById('expDate').value;
+            const cat = document.getElementById('expCat').value;
+            const desc = document.getElementById('expDesc').value;
+            const taka = document.getElementById('expTaka').value;
+            if(!desc || !taka) return alert("বিবরণ এবং টাকা লিখুন!");
+            document.getElementById('submitBtn').disabled = true;
+            db.ref('expenses_ctg').push({ date, cat, desc, taka: parseFloat(taka), timestamp: Date.now() }).then(() => {
+                document.getElementById('status').innerText = "✅ Submitted Successfully!";
+                document.getElementById('expDesc').value = ""; document.getElementById('expTaka').value = "";
+                setTimeout(() => { document.getElementById('status').innerText = ""; document.getElementById('submitBtn').disabled = false; }, 3000);
+            });
+        }
+    </script>
+</body>
+</html>
