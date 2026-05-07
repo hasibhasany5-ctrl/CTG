@@ -3,58 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CTG Expense Entry | CAR ZEO</title>
+    <title>Expense Entry | CAR ZEO CTG</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background: #050810; font-family: 'Plus Jakarta Sans', sans-serif; color: white; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        
-        input, select, textarea { 
-            background: rgba(255, 255, 255, 0.05) !important; 
-            border: 1px solid rgba(255, 255, 255, 0.1) !important; 
-            color: white !important; font-size: 14px !important; padding: 12px !important; border-radius: 12px !important; width: 100%; outline: none; transition: 0.3s; 
-        }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        input, select, textarea { background: rgba(255, 255, 255, 0.05) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: white !important; font-size: 14px !important; padding: 12px !important; border-radius: 12px !important; width: 100%; outline: none; transition: 0.3s; }
         input:focus, select:focus, textarea:focus { border-color: #e31e24 !important; background: rgba(255, 255, 255, 0.08) !important; }
-        
-        /* সাদা ক্যালেন্ডার আইকন */
         input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
-
-        /* কালারফুল ড্রপডাউন অপশন */
-        #expCat option { background: #0b1120; color: white; }
-        option[value="Transaction"] { color: #fbbf24; } option[value="Transport"] { color: #3b82f6; }
-        option[value="Salary"] { color: #22c55e; } option[value="Office Maintenance"] { color: #14b8a6; }
-
-        label { font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 800; margin-left: 10px; margin-bottom: 4px; display: block; }
         #pinModal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        option { background: #0b1120; color: white; }
     </style>
 </head>
 <body class="p-4 flex flex-col items-center min-h-screen">
     
-    <div class="w-full max-w-md glass p-8 rounded-[40px] shadow-2xl mb-8">
-        <div class="text-center mb-6">
-            <img src="https://i.ibb.co.com/C3hMvPDz/IMG-5204-JPG.jpg" class="w-32 mx-auto rounded-2xl mb-4 border border-white/10 shadow-xl">
-            <h1 class="text-2xl font-black uppercase italic tracking-tighter">CAR ZEO <span class="text-red-600">CTG</span></h1>
-            <p class="text-[9px] text-blue-400 font-bold uppercase tracking-widest">Chattogram Branch Entry</p>
+    <div class="w-full max-w-md glass p-10 rounded-[40px] shadow-2xl mb-8">
+        <div class="text-center mb-8">
+            <img src="https://i.ibb.co.com/C3hMvPDz/IMG-5204-JPG.jpg" class="w-36 mx-auto rounded-2xl mb-4 border border-white/10 shadow-xl">
+            <h1 class="text-2xl font-black uppercase italic text-white">CAR ZEO <span class="text-red-600">CTG</span></h1>
         </div>
 
         <div class="space-y-4">
-            <div><label>Date</label><input type="date" id="expDate"></div>
-            <div><label>Category</label>
+            <div><label class="text-[10px] font-bold text-gray-500 uppercase ml-2">Date</label><input type="date" id="expDate"></div>
+            <div><label class="text-[10px] font-bold text-gray-500 uppercase ml-2">Category</label>
                 <select id="expCat">
                     <option value="Transaction">Transaction</option><option value="Other bill">Other bill</option><option value="Transport">Transport</option><option value="Snacks">Snacks</option><option value="Courier">Courier</option><option value="Office Maintenance">Office Maintenance</option><option value="Rent">Rent</option><option value="Salary">Salary</option><option value="Vehicle Maintenance">Vehicle Maintenance</option><option value="Fuel Cost">Fuel Cost</option><option value="Paper Work">Paper Work</option>
                 </select>
             </div>
-            <div><label>Description</label><textarea id="expDesc" rows="2" placeholder="Details..."></textarea></div>
-            <div><label>Taka</label><input type="number" id="expTaka" placeholder="0.00"></div>
+            <div><label class="text-[10px] font-bold text-gray-500 uppercase ml-2">Description</label><textarea id="expDesc" rows="2" placeholder="বিস্তারিত বিবরণ..."></textarea></div>
+            <div><label class="text-[10px] font-bold text-gray-500 uppercase ml-2">Taka</label><input type="number" id="expTaka" placeholder="0.00"></div>
             <button onclick="submitExpense()" id="submitBtn" class="w-full bg-gradient-to-r from-red-600 to-blue-700 py-4 rounded-xl font-black uppercase text-sm mt-2 hover:scale-95 transition-all">Submit Records</button>
         </div>
+        <p id="status" class="mt-4 text-center font-bold text-xs"></p>
     </div>
 
     <!-- History -->
     <div class="w-full max-w-4xl glass p-6 rounded-3xl overflow-hidden">
-        <h2 class="text-sm font-bold mb-4 opacity-50 uppercase tracking-widest"><i class="fas fa-history mr-2"></i> Recent Entries</h2>
+        <h2 class="text-sm font-bold mb-4 opacity-50 uppercase tracking-widest"><i class="fas fa-history mr-2"></i> Recent CTG Entries</h2>
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
                 <thead><tr class="text-gray-500 border-b border-white/10"><th class="p-3">Date</th><th>Category</th><th>Details</th><th>Taka</th><th class="text-center">Del</th></tr></thead>
@@ -67,31 +54,40 @@
     <div id="pinModal"><div class="bg-[#111827] p-8 rounded-3xl border border-gray-800 text-center w-72">
         <h3 class="font-bold mb-4">Enter Delete PIN</h3>
         <input type="password" id="adminPIN" class="w-full bg-black/50 border border-white/10 p-2 rounded-xl text-center text-white outline-none mb-4">
-        <div class="flex gap-2"><button onclick="confirmDelete()" class="flex-1 bg-red-600 py-2 rounded-lg font-bold text-sm">OK</button><button onclick="closeModal()" class="flex-1 bg-gray-700 py-2 rounded-lg font-bold text-sm">No</button></div>
+        <div class="flex gap-2"><button onclick="confirmDelete()" class="flex-1 bg-red-600 py-2 rounded-lg font-bold">OK</button><button onclick="closeModal()" class="flex-1 bg-gray-700 py-2 rounded-lg font-bold">No</button></div>
     </div></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyBoAZNSMBdpTspg_ixCf_ln-pxwfws-QbY", databaseURL: "https://carzeo-accountant-hub-default-rtdb.firebaseio.com" };
+        // --- NEW FIREBASE CONFIG (Accountant Hub) ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoAZNSMBdpTspg_ixCf_ln-pxwfws-QbY",
+            authDomain: "carzeo-accountant-hub.firebaseapp.com",
+            projectId: "carzeo-accountant-hub",
+            storageBucket: "carzeo-accountant-hub.firebasestorage.app",
+            messagingSenderId: "441800831537",
+            appId: "1:441800831537:web:afd3090671743fe4cb1b10",
+            databaseURL: "https://carzeo-accountant-hub-default-rtdb.firebaseio.com"
+        };
         firebase.initializeApp(firebaseConfig); const db = firebase.database();
 
-        // Auto-save & persistence
+        // Auto-save form
         const fields = ['expDate', 'expCat', 'expDesc', 'expTaka'];
         window.onload = () => {
-            fields.forEach(id => { const saved = localStorage.getItem('ctg_v3_'+id); if(saved) document.getElementById(id).value = saved; });
+            fields.forEach(id => { const saved = localStorage.getItem('ctg_new_hub_'+id); if(saved) document.getElementById(id).value = saved; });
             if(!document.getElementById('expDate').value) document.getElementById('expDate').valueAsDate = new Date();
             loadHistory();
         };
-        fields.forEach(id => document.getElementById(id).addEventListener('input', () => localStorage.setItem('ctg_v3_'+id, document.getElementById(id).value)));
+        fields.forEach(id => document.getElementById(id).addEventListener('input', () => localStorage.setItem('ctg_new_hub_'+id, document.getElementById(id).value)));
 
         function submitExpense() {
             const date = document.getElementById('expDate').value, cat = document.getElementById('expCat').value, desc = document.getElementById('expDesc').value, taka = document.getElementById('expTaka').value;
-            if(!desc || !taka) return alert("Fill Details & Taka!");
+            if(!desc || !taka) return alert("দয়া করে সব বিবরণ দিন!");
             document.getElementById('submitBtn').disabled = true;
             db.ref('expenses_ctg').push({ date, cat, desc, taka: parseFloat(taka), timestamp: Date.now() }).then(() => {
                 document.getElementById('expDesc').value = ""; document.getElementById('expTaka').value = "";
-                localStorage.removeItem('ctg_v3_expDesc'); localStorage.removeItem('ctg_v3_expTaka');
+                localStorage.removeItem('ctg_new_hub_expDesc'); localStorage.removeItem('ctg_new_hub_expTaka');
                 document.getElementById('submitBtn').disabled = false;
             });
         }
@@ -100,7 +96,7 @@
             db.ref('expenses_ctg').on('value', snap => {
                 const body = document.getElementById('historyBody'); body.innerHTML = "";
                 if(snap.val()) {
-                    Object.keys(snap.val()).reverse().slice(0, 15).forEach(key => {
+                    Object.keys(snap.val()).reverse().slice(0, 10).forEach(key => {
                         const d = snap.val()[key];
                         body.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-3 opacity-60">${d.date}</td><td class="text-blue-400 font-bold">${d.cat}</td><td>${d.desc}</td><td class="font-black text-red-500">${d.taka}</td><td class="text-center"><button onclick="askDelete('${key}')" class="text-gray-700 hover:text-red-500"><i class="fas fa-trash"></i></button></td></tr>`;
                     });
